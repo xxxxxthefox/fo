@@ -1,0 +1,488 @@
+-- Made BY Mr.Alegator
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 100)
+frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+frame.BackgroundColor3 = Color3.new(1, 1, 1)
+frame.Parent = screenGui
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 20)
+title.Position = UDim2.new(0, 0, 0, -20)
+title.Text = "اكتب مفتاح السكربت"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.BackgroundColor3 = Color3.new(0, 0, 0)
+title.Parent = frame
+
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+title.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+title.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+title.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+        dragInput = nil
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+local KeySystem = Instance.new("TextBox")
+KeySystem.Size = UDim2.new(1, 0, 0.5, 0)
+KeySystem.Position = UDim2.new(0, 0, 0, 0)
+KeySystem.Text = "اكتب المفتاح"
+KeySystem.TextColor3 = Color3.new(0, 0, 0)
+KeySystem.BackgroundTransparency = 0.5
+KeySystem.BackgroundColor3 = Color3.new(1, 1, 1)
+KeySystem.TextWrapped = true
+KeySystem.Parent = frame
+
+local SubmitButton = Instance.new("TextButton")
+SubmitButton.Size = UDim2.new(0.5, 0, 0.5, 0)
+SubmitButton.Position = UDim2.new(0, 0, 0.5, 0)
+SubmitButton.Text = "دخول"
+SubmitButton.Parent = frame
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 20, 0, 20)
+CloseButton.Position = UDim2.new(1, -20, 0, 0)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.new(1, 1, 1)
+CloseButton.BackgroundColor3 = Color3.new(1, 0, 0)
+CloseButton.Parent = frame
+
+CloseButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+local GetKeyButton = Instance.new("TextButton")
+GetKeyButton.Size = UDim2.new(0.5, 0, 0.5, 0)
+GetKeyButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+GetKeyButton.Text = "احصل على المفتاح"
+GetKeyButton.Parent = frame
+--------------------------------------------------------------------------
+SubmitButton.MouseButton1Click:Connect(function()
+    local KeySystem = KeySystem.Text
+    if KeySystem == "E3QR80$R42!L" then   
+screenGui:Destroy()
+
+-- Services
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+local Teams = game:GetService("Teams")
+
+-- Local Player
+local localPlayer = Players.LocalPlayer
+local camera = Workspace.CurrentCamera
+
+-- Variables
+local aimbotEnabled = false
+local predictionFactor = 0.1
+
+-- Colors
+local enemyColor = Color3.fromRGB(255, 0, 0)
+local teamColor = Color3.fromRGB(0, 0, 255)
+local noneColor = Color3.fromRGB(0, 255, 0)
+local enemyDetectedColor = Color3.fromRGB(255, 0, 0)
+
+-- UI Elements
+local screenGui = Instance.new("ScreenGui")
+screenGui.ResetOnSpawn = false
+screenGui.Parent = localPlayer:WaitForChild("PlayerGui")
+
+local guiFrame = Instance.new("Frame")
+guiFrame.Size = UDim2.new(0, 150, 0, 90) -- Adjusted size for the GUI frame
+guiFrame.Position = UDim2.new(0.5, -75, 0.5, -50) -- Centered position
+guiFrame.BackgroundTransparency = 0.5 -- Semi-transparent black
+guiFrame.BackgroundColor3 = Color3.new(0, 0, 0) -- Black background
+guiFrame.BorderSizePixel = 0 -- No border
+guiFrame.Parent = screenGui
+
+-- Title for the GUI
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 20) -- Height adjusted
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1 -- Transparent background
+title.TextColor3 = Color3.new(1, 1, 1) -- White text color
+title.TextStrokeTransparency = 0 -- Visible text stroke
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 18
+title.Text = "fox"
+title.Parent = guiFrame
+
+-- Toggle Button for Aimbot
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 90, 0, 25) -- Slightly larger size
+toggleButton.Position = UDim2.new(0.5, -45, 0.5, -12.5) -- Centered position within the GUI frame
+toggleButton.AnchorPoint = Vector2.new(0.5, 0.5)
+toggleButton.BackgroundTransparency = 0.2
+toggleButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
+toggleButton.BorderSizePixel = 2
+toggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+toggleButton.TextColor3 = Color3.new(0, 0, 0) -- Black text color
+toggleButton.Text = "Toggle (Off)"
+toggleButton.Parent = guiFrame
+
+-- Enemy Status Label
+local enemyStatusLabel = Instance.new("TextLabel")
+enemyStatusLabel.Size = UDim2.new(0, 220, 0, 25) -- Slightly larger size
+enemyStatusLabel.Position = UDim2.new(0.5, -110, 0.2, -10) -- Slightly more to the right
+enemyStatusLabel.AnchorPoint = Vector2.new(0.5, 0)
+enemyStatusLabel.BackgroundTransparency = 1
+enemyStatusLabel.TextColor3 = noneColor
+enemyStatusLabel.Font = Enum.Font.SourceSansBold
+enemyStatusLabel.TextSize = 18
+enemyStatusLabel.Text = "تم التصويب: مدري مفي احد في النطاق"
+enemyStatusLabel.Parent = screenGui
+
+-- Update Label for version
+local updateLabel = Instance.new("TextLabel")
+updateLabel.Size = UDim2.new(1, 0, 0, 20) -- Adjust size as necessary
+updateLabel.Position = UDim2.new(0, 0, 1, -20)
+updateLabel.BackgroundTransparency = 1
+updateLabel.TextColor3 = Color3.new(1, 1, 1)
+updateLabel.Font = Enum.Font.SourceSans
+updateLabel.TextSize = 14
+updateLabel.Text = "كيف حالك"
+updateLabel.Parent = guiFrame
+
+-- Function to check if a player is an enemy
+local function isEnemy(player)
+    if Teams and player.Team then
+        return player.Team ~= localPlayer.Team
+    else
+        return true
+    end
+end
+
+-- Function to create a highlight around a character
+local function createHighlight(character, color)
+    local highlight = Instance.new("Highlight")
+    highlight.Adornee = character
+    highlight.FillColor = color
+    highlight.FillTransparency = 0.75
+    highlight.OutlineColor = color
+    highlight.OutlineTransparency = 0
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.Parent = character
+end
+
+-- Function to create a role label above a character's head
+local function createRoleLabel(character, text, color)
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Adornee = character:FindFirstChild("Head")
+    billboardGui.Size = UDim2.new(0, 100, 0, 30) -- Larger size
+    billboardGui.StudsOffset = Vector3.new(0, 6, 0) -- Adjusted offset
+    billboardGui.Parent = character
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = color
+    textLabel.Font = Enum.Font.SourceSansBold
+    textLabel.TextSize = 20 -- Larger text size
+    textLabel.Text = text
+    textLabel.Parent = billboardGui
+
+    -- Distance Label
+    local distanceLabel = Instance.new("TextLabel")
+    distanceLabel.Size = UDim2.new(1, 0, 1, 0)
+    distanceLabel.Position = UDim2.new(0, 0, 1, 0) -- Positioned below the role label
+    distanceLabel.BackgroundTransparency = 1
+    distanceLabel.TextColor3 = enemyColor
+    distanceLabel.Font = Enum.Font.SourceSansBold
+    distanceLabel.TextSize = 20 -- Same size as role label
+    distanceLabel.Parent = billboardGui
+
+    RunService.RenderStepped:Connect(function()
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local distance = (character.HumanoidRootPart.Position - localPlayer.Character.HumanoidRootPart.Position).Magnitude
+            distanceLabel.Text = string.format("Distance: %d", math.floor(distance))
+        end
+    end)
+end
+
+-- Function to check if a part is visible
+local function isPartVisible(part)
+    local origin = camera.CFrame.Position
+    local direction = (part.Position - origin).Unit * (part.Position - origin).Magnitude
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {localPlayer.Character, part.Parent}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+    local raycastResult = Workspace:Raycast(origin, direction, raycastParams)
+    return raycastResult == nil
+end
+
+-- Function to find the most visible and closest player's head hitbox
+local function getTargetPlayerHitbox()
+    local bestHitbox = nil
+    local highestPriority = 0
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= localPlayer and player.Character then
+            if isEnemy(player) and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+                local head = player.Character:FindFirstChild("Head")
+                if head and isPartVisible(head) then
+                    local distance = (head.Position - localPlayer.Character.HumanoidRootPart.Position).Magnitude
+                    local visibility = 1 / distance
+                    local priority = visibility
+
+                    if priority > highestPriority then
+                        highestPriority = priority
+                        bestHitbox = head
+                    end
+                end
+            end
+        end
+    end
+
+    return bestHitbox
+end
+
+-- Initial creation of highlights and labels
+local function updateHighlightsAndLabels()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= localPlayer and player.Character then
+            local color = isEnemy(player) and enemyColor or teamColor
+            createHighlight(player.Character, color)
+            createRoleLabel(player.Character, isEnemy(player) and "تحدير" or "(TEAMMATE)", color)
+        end
+    end
+end
+
+updateHighlightsAndLabels()
+
+-- Update highlights and labels if new players join
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        wait(1)
+        if player ~= localPlayer then
+            local color = isEnemy(player) and enemyColor or teamColor
+            createHighlight(character, color)
+            createRoleLabel(character, isEnemy(player) and "تحدير" or "(TEAMMATE)", color)
+        end
+    end)
+end)
+
+toggleButton.MouseButton1Click:Connect(function()
+    aimbotEnabled = not aimbotEnabled
+    toggleButton.Text = aimbotEnabled and "Toggle (On)" or "Toggle (Off)"
+    if not aimbotEnabled then
+        enemyStatusLabel.Text = "تم التصويب: مدري مفي احد في النطاق"
+        enemyStatusLabel.TextColor3 = noneColor
+    end
+end)
+
+-- Function to predict enemy movement
+local function predictMovement(hitbox, deltaTime)
+    local velocity = hitbox.Velocity
+    local acceleration = Vector3.new(0, -Workspace.Gravity, 0)
+    local predictedPosition = hitbox.Position + (velocity * predictionFactor) + (0.5 * acceleration * predictionFactor^2)
+    return predictedPosition
+end
+
+-- Main loop to update the camera focus and character's look direction
+RunService.RenderStepped:Connect(function(deltaTime)
+    if aimbotEnabled then
+        local targetHitbox = getTargetPlayerHitbox()
+
+        if targetHitbox then
+            local targetPosition = targetHitbox.Position
+            enemyStatusLabel.Text = "تم التصويب عل: " .. targetHitbox.Parent.Name
+            enemyStatusLabel.TextColor3 = enemyDetectedColor
+
+            -- Smooth camera transition
+            local currentPosition = camera.CFrame.Position
+            local lookAt = CFrame.new(currentPosition, targetPosition)
+            camera.CFrame = lookAt:Lerp(CFrame.new(currentPosition, targetPosition), 0.1)
+
+            -- Smooth character transition
+            local character = localPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character.HumanoidRootPart.CFrame = CFrame.new(character.HumanoidRootPart.Position, targetPosition)
+            end
+        else
+            enemyStatusLabel.Text = "تم التصويب: مدري مفي احد في النطاق"
+            enemyStatusLabel.TextColor3 = noneColor
+        end
+    end
+end)
+
+-- Ensure highlights, labels, and UI are re-applied after respawn
+localPlayer.CharacterAdded:Connect(function()
+    wait(1)
+    updateHighlightsAndLabels()
+    guiFrame.Parent = screenGui
+end)
+
+-- Dragging functionality for the GUI
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    guiFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+local function onInputBegan(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = guiFrame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end
+
+local function onInputChanged(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end
+
+guiFrame.InputBegan:Connect(onInputBegan)
+guiFrame.InputChanged:Connect(onInputChanged)
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+-- Function to destroy the toggle button and recreate it with functionality
+local function recreateToggleButton()
+    toggleButton:Destroy()
+
+    toggleButton = Instance.new("TextButton")
+    toggleButton.Size = UDim2.new(0, 100, 0, 25) -- Slightly larger size
+    toggleButton.Position = UDim2.new(0.8, -50, 0.6, -15) -- Centered position within the GUI frame
+    toggleButton.AnchorPoint = Vector2.new(0.5, 0.5)
+    toggleButton.BackgroundTransparency = 0.2
+    toggleButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
+    toggleButton.BorderSizePixel = 2
+    toggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    toggleButton.TextColor3 = Color3.new(0, 0, 0) -- Black text color
+    toggleButton.Text = "Toggle (Off)"
+    toggleButton.Parent = guiFrame
+
+    toggleButton.MouseButton1Click:Connect(function()
+        aimbotEnabled = not aimbotEnabled
+        toggleButton.Text = aimbotEnabled and "مشغل" or "مطفا"
+        if not aimbotEnabled then
+            enemyStatusLabel.Text = "تم التصويب: مدري مفي احد في النطاق"
+            enemyStatusLabel.TextColor3 = noneColor
+        end
+    end)
+end
+
+recreateToggleButton()
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/linemaster2/esp-library/main/library.lua"))();
+
+--// Master switch
+ESP.Enabled = true;
+
+--// Enable boxes
+ESP.ShowBox = true;
+
+--// Set the box type to corner
+ESP.BoxType = "Corner Box Esp";
+
+--// Enable names
+ESP.ShowName = true;
+
+--// Enable Healhbar
+ESP.ShowHealth = true;
+
+--// Enable tracers
+ESP.ShowTracer = true;
+
+--// Enable Distance
+ESP.ShowDistance = true;
+
+--[[
+    Enable skeletons: (currently broken)
+    ESP.ShowSkeletons = true;
+]]
+
+
+
+--[[
+    These are all the settings
+    local ESP_SETTINGS = {
+        BoxOutlineColor = Color3.new(0, 0, 0),
+        BoxColor = Color3.new(1, 1, 1),
+        NameColor = Color3.new(1, 1, 1),
+        HealthOutlineColor = Color3.new(0, 0, 0),
+        HealthHighColor = Color3.new(0, 1, 0),
+        HealthLowColor = Color3.new(1, 0, 0),
+        CharSize = Vector2.new(4, 6),
+        Teamcheck = false,
+        WallCheck = false,
+        Enabled = false,
+        ShowBox = false,
+        BoxType = "2D",
+        ShowName = false,
+        ShowHealth = false,
+        ShowDistance = false,
+        ShowSkeletons = false,
+        ShowTracer = false,
+        TracerColor = Color3.new(1, 1, 1), 
+        TracerThickness = 2,
+        SkeletonsColor = Color3.new(1, 1, 1),
+        TracerPosition = "Bottom",
+    }
+    ermm yep thats about it
+]]
+game.StarterGui:SetCore("SendNotification", {
+    Title = "@xxxxxthefox",
+    Text = "https://www.youtube.com/@xxxxxthefox",
+    Duration = 5
+})
+  
+  end
+end)
+
+GetKeyButton.MouseButton1Click:Connect(function()
+ setclipboard("https://shrinkme.dev/FOX12") 
+end) 
